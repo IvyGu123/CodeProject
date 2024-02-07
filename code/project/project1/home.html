@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Book Store</title>
+    <script>
+      function changeText() {
+        document.getElementById("text").innerHTML = "Sold";
+        document.getElementById("text").style.color = "green";
+        localStorage.setItem("bookstatus", "Sold");
+      }
+      function changeTextCancel() {
+        document.getElementById("text").innerHTML = "Not Sold";
+        document.getElementById("text").style.color = "black";
+        localStorage.setItem("bookstatus", "Not Sold");
+      }
+
+      window.onload = function() { // can also use window.addEventListener('load', (event) => {
+        // get the value of the bookstatus from local storage
+        var bookstatus = localStorage.getItem("bookstatus");
+        document.getElementById("text").innerHTML = bookstatus;
+        // check if the user is logged in
+        var login = sessionStorage.getItem("login");
+        if(login !== "true"){
+          window.location.href = "index.html";
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <div style="border: 1px solid #ccc;width: fit-content;">
+      <img src="./assets/book.png" onclick="myFun">
+      <h2 align="center">Book1</h2>
+      <p style="color: red;font-size: large;margin-left: 10%;">$100</p>
+      <p style="color: black;font-size: large;margin-left: 10%;" id="text">Not Sold</p>
+      <button onclick="changeText()">Buy</button>
+      <button onclick="changeTextCancel()">Cancel</button>
+    </div>
+    <p style="color: black;font-size: large;margin-left: 10%;">Ivy</p>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Login</title>
+    <script>
+      // window.onload = function() { // can also use window.addEventListener('load', (event) => {
+      //   // get the value of the bookstatus from local storage
+      //   var bookstatus = localStorage.getItem("bookstatus");
+      //   document.getElementById("text").innerHTML = bookstatus;
+      //   // session storage
+      //   sessionStorage.setItem("test2", "test2");
+      // };
+      function register(){
+        localStorage.setItem("username", document.getElementById("username").value);
+        localStorage.setItem("password", document.getElementById("password").value);
+      }
+
+      function login(){
+        // compare the username and password with the one in local storage
+        var username = localStorage.getItem("username");
+        var password = localStorage.getItem("password");
+        if(username === document.getElementById("username").value && password === document.getElementById("password").value){
+          // set the session storage
+          sessionStorage.setItem("login", "true");
+          // redirect to home page
+          window.location.href = "home.html";
+        }else{
+          alert("login failed");
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <input type="text" id="username" placeholder="username" />
+    <input type="password" id="password" placeholder="password" />
+
+    <button onclick="login()">login</button>
+    <button onclick="register()">register</button>
+  </body>
+</html>
