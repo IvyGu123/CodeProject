@@ -34,3 +34,34 @@ Session Storeage...
 1. Make the `login` page more beautiful (CSS)
 2. Display the user's name on the `home` page (localStorage) (DomContentLoaded,load)
 3. Make the `buy` and `cancel` button into the `cardview` (Html, CSS)
+<<<<<<< HEAD
+=======
+
+---
+
+## Display(CSS)
+
+### Flex
+
+- Center
+  - The items are packed flush to each other toward the center of the alignment container along the main axis.
+- Right
+- Left
+- Space-between
+  - The items are evenly distributed within the alignment container along the main axis. The spacing between each pair of adjacent items is the same. The first item is flush with the main-start edge, and the last item is flush with the main-end edge.
+- Space-around
+
+---
+
+## Center the elements
+
+```css
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+
+---
+>>>>>>> 88e47e1 (Initial commit)
