@@ -13,6 +13,28 @@
         localStorage.setItem("bookstatus", "Not Sold");
       }
 
+      function getPriceFromServer(){
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://localhost:5000/price", true);
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState == 4 && xhr.status == 200){
+            console.log(xhr.responseText);
+          }
+        }
+        xhr.send();
+      }
+
+      function getBookNameFromServer(){
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://localhost:5000/book", true);
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState == 4 && xhr.status == 200){
+            console.log(xhr.responseText);
+          }
+        }
+        xhr.send();
+      }
+
       window.onload = function() { // can also use window.addEventListener('load', (event) => {
         // get the value of the bookstatus from local storage
         var bookstatus = localStorage.getItem("bookstatus");
@@ -22,6 +44,8 @@
         if(login !== "true"){
           window.location.href = "index.html";
         }
+        getPriceFromServer();
+        getBookNameFromServer();
       };
     </script>
   </head>
@@ -31,18 +55,12 @@
       <h2 align="center">Book1</h2>
       <p style="color: red;font-size: large;margin-left: 10%;">$100</p>
       <p style="color: black;font-size: large;margin-left: 10%;" id="text">Not Sold</p>
-<<<<<<< HEAD
       <button onclick="changeText()">Buy</button>
       <button onclick="changeTextCancel()">Cancel</button>
     </div>
-    <p style="color: black;font-size: large;margin-left: 10%;">Ivy</p>
-=======
+
       <div style="display: flex;justify-content: space-around;">
-        <button onclick="changeText()">Buy</button>
-        <button onclick="changeTextCancel()">Cancel</button>
       </div>
     </div>
-    
->>>>>>> 88e47e1 (Initial commit)
   </body>
 </html>
