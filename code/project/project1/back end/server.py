@@ -12,7 +12,8 @@ def hello():
 def getBookInfo():
     book = {
         'title': 'The Great Gatsby',
-        'price': 12.99
+        'price': 12.99,
+        'status': 'Sold'
     }
     return dumps(book)
 

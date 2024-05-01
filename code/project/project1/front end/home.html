@@ -3,13 +3,13 @@
     <title>Book Store</title>
     <script>
       function changeText() {
-        document.getElementById("text").innerHTML = "Sold";
-        document.getElementById("text").style.color = "green";
+        document.getElementById("bookstatus").innerHTML = "Sold";
+        document.getElementById("bookstatus").style.color = "green";
         localStorage.setItem("bookstatus", "Sold");
       }
       function changeTextCancel() {
-        document.getElementById("text").innerHTML = "Not Sold";
-        document.getElementById("text").style.color = "black";
+        document.getElementById("bookstatus").innerHTML = "Not Sold";
+        document.getElementById("bookstatus").style.color = "black";
         localStorage.setItem("bookstatus", "Not Sold");
       }
 
@@ -22,6 +22,7 @@
             console.log(bookprice);
           document.getElementById("bookprice").innerHTML = "$" + data.price;
           document.getElementById("bookname").innerHTML = data.title;
+          document.getElementById("bookstatus").innerHTML = data.status;
           })
           .catch((error) => {
           console.error('Error:', error);
@@ -31,7 +32,7 @@
       window.onload = function() { // can also use window.addEventListener('load', (event) => {
         // get the value of the bookstatus from local storage
         var bookstatus = localStorage.getItem("bookstatus");
-        document.getElementById("text").innerHTML = bookstatus;
+        document.getElementById("bookstatus").innerHTML = bookstatus;
         // check if the user is logged in
         var login = sessionStorage.getItem("login");
         if(login !== "true"){
@@ -46,7 +47,7 @@
       <img src="./assets/book.png" onclick="myFun">
       <h2 align="center" id="bookname">Book1</h2>
       <p style="color: red;font-size: large;margin-left: 10%;" id="bookprice">$100</p>
-      <p style="color: black;font-size: large;margin-left: 10%;" id="text">Not Sold</p>
+      <p style="color: black;font-size: large;margin-left: 10%;" id="bookstatus">Not Sold</p>
       <button onclick="changeText()">Buy</button>
       <button onclick="changeTextCancel()">Cancel</button>
     </div>
