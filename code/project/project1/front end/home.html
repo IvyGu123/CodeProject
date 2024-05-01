@@ -13,26 +13,19 @@
         localStorage.setItem("bookstatus", "Not Sold");
       }
 
-      function getPriceFromServer(){
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "http://localhost:5000/price", true);
-        xhr.onreadystatechange = function(){
-          if(xhr.readyState == 4 && xhr.status == 200){
-            console.log(xhr.responseText);
-          }
-        }
-        xhr.send();
-      }
-
-      function getBookNameFromServer(){
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "http://localhost:5000/book", true);
-        xhr.onreadystatechange = function(){
-          if(xhr.readyState == 4 && xhr.status == 200){
-            console.log(xhr.responseText);
-          }
-        }
-        xhr.send();
+      function getBookInfoFromServer() {
+          const response = fetch('http://localhost:5000/bookinfo')
+          // {"title":""The Great Gatsby","price":12.99}
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            console.log(bookprice);
+          document.getElementById("bookprice").innerHTML = "$" + data.price;
+          document.getElementById("bookname").innerHTML = data.title;
+          })
+          .catch((error) => {
+          console.error('Error:', error);
+        });
       }
 
       window.onload = function() { // can also use window.addEventListener('load', (event) => {
@@ -44,16 +37,15 @@
         if(login !== "true"){
           window.location.href = "index.html";
         }
-        getPriceFromServer();
-        getBookNameFromServer();
+        getBookInfoFromServer();
       };
     </script>
   </head>
   <body>
     <div style="border: 1px solid #ccc;width: fit-content;">
       <img src="./assets/book.png" onclick="myFun">
-      <h2 align="center">Book1</h2>
-      <p style="color: red;font-size: large;margin-left: 10%;">$100</p>
+      <h2 align="center" id="bookname">Book1</h2>
+      <p style="color: red;font-size: large;margin-left: 10%;" id="bookprice">$100</p>
       <p style="color: black;font-size: large;margin-left: 10%;" id="text">Not Sold</p>
       <button onclick="changeText()">Buy</button>
       <button onclick="changeTextCancel()">Cancel</button>
