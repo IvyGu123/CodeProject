@@ -18,11 +18,19 @@
           // {"title":""The Great Gatsby","price":12.99}
           .then(response => response.json())
           .then(data => {
-            console.log(data);
-            console.log(bookprice);
-          document.getElementById("bookprice").innerHTML = "$" + data.price;
-          document.getElementById("bookname").innerHTML = data.title;
-          document.getElementById("bookstatus").innerHTML = data.status;
+          console.log(data);
+          
+          var booksElement = document.getElementById("books");
+          for(let i = 0; i < data.length; i++){
+            let book = data[i];
+            let bookElement = document.createElement("div");
+            bookElement.innerHTML = book.title;
+            booksElement.appendChild(bookElement);
+          }
+          // console.log(bookprice);
+          // document.getElementById("bookprice").innerHTML = "$" + data.price;
+          // document.getElementById("bookname").innerHTML = data.title;
+          // document.getElementById("bookstatus").innerHTML = data.status;
           })
           .catch((error) => {
           console.error('Error:', error);
