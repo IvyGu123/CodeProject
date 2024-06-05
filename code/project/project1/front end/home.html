@@ -117,10 +117,15 @@
           window.location.href = "index.html";
         }
         getBookInfoFromServer();
+        var username = document.getElementById("header");
+        username.innerHTML = localStorage.getItem("username");
       };
+      
     </script>
+  
   </head>
   <body>
-    <div style="display: flex;" id = "books"></div>
+    <div style="width: 100%; background-color: rgb(61, 255, 255); text-align: right;" id = "header">username</div>
+    <div style="display: flex;" id = "books"></div> 
   </body>
 </html>
