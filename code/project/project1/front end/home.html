@@ -2,46 +2,116 @@
   <head>
     <title>Book Store</title>
     <script>
-      function changeText() {
-        document.getElementById("bookstatus").innerHTML = "Sold";
-        document.getElementById("bookstatus").style.color = "green";
-        localStorage.setItem("bookstatus", "Sold");
-      }
-      function changeTextCancel() {
-        document.getElementById("bookstatus").innerHTML = "Not Sold";
-        document.getElementById("bookstatus").style.color = "black";
-        localStorage.setItem("bookstatus", "Not Sold");
-      }
-
-      function getBookInfoFromServer() {
-          const response = fetch('http://localhost:5000/bookinfo')
-          // {"title":""The Great Gatsby","price":12.99}
-          .then(response => response.json())
-          .then(data => {
-          console.log(data);
-          
-          var booksElement = document.getElementById("books");
-          for(let i = 0; i < data.length; i++){
-            let book = data[i];
-            let bookElement = document.createElement("div");
-            bookElement.innerHTML = book.title;
-            booksElement.appendChild(bookElement);
-          }
-          // console.log(bookprice);
-          // document.getElementById("bookprice").innerHTML = "$" + data.price;
-          // document.getElementById("bookname").innerHTML = data.title;
-          // document.getElementById("bookstatus").innerHTML = data.status;
+      
+      function buyBook(bookId){
+        const response = fetch('http://localhost:5000/buyBook/'+bookId, {method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({bookid: 1}),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:' ,data);
+        location.reload();
           })
           .catch((error) => {
           console.error('Error:', error);
         });
       }
 
-      window.onload = function() { // can also use window.addEventListener('load', (event) => {
-        // get the value of the bookstatus from local storage
-        var bookstatus = localStorage.getItem("bookstatus");
-        document.getElementById("bookstatus").innerHTML = bookstatus;
-        // check if the user is logged in
+      function cancelBook(bookId){
+        const response = fetch('http://localhost:5000/cancelBook/'+bookId, {method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({bookid: 1}),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:' ,data);
+        location.reload();
+          })
+          .catch((error) => {
+          console.error('Error:', error);
+        });
+      }
+      function deleteBook(bookId){
+        const response = fetch('http://localhost:5000/deleteBook/'+bookId, {method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({bookid: 1}),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:' ,data);
+        location.reload();
+          })
+          .catch((error) => {
+          console.error('Error:', error);
+        });
+      }
+
+      function getBookInfoFromServer() {
+          const response = fetch('http://localhost:5000/bookinfo')
+
+          .then(response => response.json())
+          .then(data => {
+          console.log(data);
+          
+          var booksElement = document.getElementById("books");
+          for(let i = 0; i < data.length; i++){
+            let bookCardView = document.createElement("div");
+
+            bookCardView.style.border = "1px solid #ccc";
+            bookCardView.style.width = "fit-content";
+            bookCardView.style.padding = "10px";
+            
+            bookCardView.appendChild(document.createElement("img"));
+            bookCardView.children[0].src = "./assets/book.png";
+            bookCardView.appendChild(document.createElement("h2"));
+            bookCardView.children[1].innerHTML = data[i].title;
+            bookCardView.appendChild(document.createElement("p"));
+            bookCardView.children[2].innerHTML = "id: " + data[i].id;
+            bookCardView.appendChild(document.createElement("p"));
+            bookCardView.children[3].innerHTML = "$" + data[i].price;
+            bookCardView.children[3].style.color = "red";
+            bookCardView.appendChild(document.createElement("p"));
+            bookCardView.children[4].innerHTML = data[i].status;
+            bookCardView.children[4].style.color = "black";
+            let buttons = document.createElement("div");
+
+            buttons.style.display = "flex";
+            buttons.style.justifyContent = "space-around";
+
+            buttons.appendChild(document.createElement("button"));
+            buttons.children[0].innerHTML = "Buy";
+            buttons.children[0].onclick = function(){
+              buyBook(data[i].id);
+            }
+            buttons.appendChild(document.createElement("button"));
+            buttons.children[1].innerHTML = "Cancel";
+            buttons.children[1].onclick = function(){
+              cancelBook(data[i].id);
+            }
+            buttons.appendChild(document.createElement("button"));
+            buttons.children[2].innerHTML = "Delete";
+            buttons.children[2].onclick = function(){
+              deleteBook(data[i].id - 1);
+            }
+            booksElement.appendChild(bookCardView);
+            bookCardView.appendChild(buttons);
+          }
+          
+          })
+          .catch((error) => {
+          console.error('Error:', error);
+        });
+      }
+
+      window.onload = function() { 
+
         var login = sessionStorage.getItem("login");
         if(login !== "true"){
           window.location.href = "index.html";
@@ -51,17 +121,6 @@
     </script>
   </head>
   <body>
-    <div style="border: 1px solid #ccc;width: fit-content;">
-      <img src="./assets/book.png" onclick="myFun">
-      <h2 align="center" id="bookname">Book1</h2>
-      <p style="color: red;font-size: large;margin-left: 10%;" id="bookprice">$100</p>
-      <p style="color: black;font-size: large;margin-left: 10%;" id="bookstatus">Not Sold</p>
-      <button onclick="changeText()">Buy</button>
-      <button onclick="changeTextCancel()">Cancel</button>
-    </div>
-
-      <div style="display: flex;justify-content: space-around;">
-      </div>
-    </div>
+    <div style="display: flex;" id = "books"></div>
   </body>
 </html>

@@ -7,17 +7,20 @@ CORS(app)
 books = [{
         'title': 'The Great Gatsby',
         'price': 12.99,
-        'status': 'Sold'
+        'status': 'Sold',
+        'id': 1
     },
     {
         'title': 'The Catcher in the Rye',
         'price': 10.99,
-        'status': 'Available'
+        'status': 'Available',
+        'id': 2
     },
     {
         'title': 'To kill a Mockingbird',
         'price': 9.99,
-        'status': 'Available'
+        'status': 'Available',
+        'id': 3
     }
     ]
 
@@ -47,21 +50,38 @@ def addBook():
     books.append(new_book)
     return dumps(new_book)
 
-@app.route('/bookinfo/<int:book_id>', methods=['DELETE'])
-def deleteBook(book_id):
-    for i, book in enumerate(books):
-        if book['id'] == book_id:
-            del books[i]
-            return 'Book deleted'
-    return 'Book not found', 404
-
 @app.route('/bookinfo/<int:book_id>', methods=['PUT'])
 def updateBook(book_id):
     for book in books:
         if book['id'] == book_id:
             book['title'] == 'Updated Book'
             book['price'] == 99.99
-            book['status'] == 'Sold'
+            book['status'] == 'Available'
+            return dumps(book)
+    return 'Book not found', 404
+
+@app.route('/deleteBook/<int:book_id>', methods=['DELETE'])
+def deleteBook(book_id):
+    for book in books:
+        if book['id'] == book_id:
+            del books[book_id]
+            return dumps(book)
+    return 'Book not found', 404
+
+@app.route('/buyBook/<int:book_id>', methods=['PUT'])
+def buyBook(book_id):
+    for book in books:
+        if book['id'] == book_id:
+            print(book['status'])
+            book['status'] = 'Sold'
+            return dumps(book)
+    return 'Book not found', 404
+
+@app.route('/cancelBook/<int:book_id>', methods=['PUT'])
+def cancelBook(book_id):
+    for book in books:
+        if book['id'] == book_id:
+            book['status'] = 'Available'
             return dumps(book)
     return 'Book not found', 404
 
