@@ -69,7 +69,8 @@
             bookCardView.style.padding = "10px";
             
             bookCardView.appendChild(document.createElement("img"));
-            bookCardView.children[0].src = "./assets/book.png";
+            bookCardView.children[0].src = data[i].image;
+            
             bookCardView.appendChild(document.createElement("h2"));
             bookCardView.children[1].innerHTML = data[i].title;
             bookCardView.appendChild(document.createElement("p"));
