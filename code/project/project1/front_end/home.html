@@ -89,12 +89,21 @@
             buttons.appendChild(document.createElement("button"));
             buttons.children[0].innerHTML = "Buy";
             buttons.children[0].onclick = function(){
-              buyBook(data[i].id);
+              if (data[i].status == "Sold"){
+                alert("Sold out");
+              }else{
+                buyBook(data[i].id);
+              }
             }
+            
             buttons.appendChild(document.createElement("button"));
             buttons.children[1].innerHTML = "Cancel";
             buttons.children[1].onclick = function(){
-              cancelBook(data[i].id);
+              if (data[i].status == "Available"){
+                alert("Available");
+              }else{
+                cancelBook(data[i].id);
+              }
             }
             buttons.appendChild(document.createElement("button"));
             buttons.children[2].innerHTML = "Delete";
