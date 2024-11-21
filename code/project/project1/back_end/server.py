@@ -1,5 +1,6 @@
+from flask import jsonify
 from json import dumps
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -28,56 +29,72 @@ def hello():
 
 @app.route('/bookinfo')
 def getBookInfo():
+    mycursor.execute("SELECT * FROM book_info")
+    myresult = mycursor.fetchall()
+    books = []
+    for x in myresult:
+        books.append({'title': x[0],'price': x[1], 'status': x[2], 'id': x[4]})
     return dumps(books)
 
 @app.route('/bookinfo/<int:book_id>')
 def getBookById(book_id):
-    for book in books:
-        if book['id'] == book_id:
-            return dumps(book)
-    return 'Book not found', 404    
+    mycursor.execute('SELECT * FROM book_info WHERE id =' +str(book_id))
+    myresult = mycursor.fetchall()
+    books = []
+    for x in myresult:
+        books.append({'title': x[0],'price': x[1], 'status': x[2], 'id': x[4]})
+    return dumps(books)
 
-@app.route('/bookinfo', methods=['POST'])
+@app.route('/bookinfo/addBook', methods=['POST'])
 def addBook():
     new_book = {
-        'id': len(books) + 1,
-        'title': 'New Book',
-        'price': 0,
-        'status': 'Available'
+        'title': request.json.get('title', 'New Book'),
+        'price': request.json.get('price', 0),
+        'status': request.json.get('status', 'Available')
     }
-    books.append(new_book)
+    mycursor.execute(
+        "INSERT INTO book_info (title, price, status) VALUES (%s, %s, %s)",
+        (new_book['title'], new_book['price'], new_book['status'])
+    )
+    mydb.commit()
+    new_book['id'] = mycursor.lastrowid
     return dumps(new_book)
 
 @app.route('/bookinfo/<int:book_id>', methods=['PUT'])
 def updateBook(book_id):
-    for book in books:
-        if book['id'] == book_id:
-            book['title'] == 'Updated Book'
-            book['price'] == 99.99
-            book['status'] == 'Available'
-            return dumps(book)
-    return 'Book not found', 404
+    updated_data = request.json
+    mycursor.execute(
+        "UPDATE book_info SET title = %s, price = %s, status = %s WHERE id = %s",
+        (updated_data.get('title', 'Updated Book'), 
+         updated_data.get('price', 99.99), 
+         updated_data.get('status', 'Available'), 
+         book_id)
+    )
+    mydb.commit()
+    if mycursor.rowcount == 0:
+        return 'Book not found', 404
 
 @app.route('/deleteBook/<int:book_id>', methods=['DELETE'])
 def deleteBook(book_id):
-    cursor.execute('DELETE * FROM books WHERE id = '+str(book_id))
+    mycursor.execute('DELETE FROM book_info WHERE id = '+str(book_id))
+    mydb.commit()
+    return jsonify({"message": "ok"}), 200
 
 @app.route('/buyBook/<int:book_id>', methods=['PUT'])
 def buyBook(book_id):
-    for book in books:
-        if book['id'] == book_id:
-            print(book['status'])
-            book['status'] = 'Sold'
-            return dumps(book)
-    return 'Book not found', 404
+    mycursor.execute("UPDATE book_info SET status = 'Sold' WHERE id = %s", (book_id,))
+    mydb.commit()
+    if mycursor.rowcount == 0:
+        return jsonify({"message": "Book not found"}), 404
+    return jsonify({"message": "ok"}), 200
 
 @app.route('/cancelBook/<int:book_id>', methods=['PUT'])
 def cancelBook(book_id):
-    for book in books:
-        if book['id'] == book_id:
-            book['status'] = 'Available'
-            return dumps(book)
-    return 'Book not found', 404
+    mycursor.execute("UPDATE book_info SET status = 'Available' WHERE id = %s", (book_id,))
+    mydb.commit()
+    if mycursor.rowcount == 0:
+        return jsonify({"message": "Book not found"}), 404
+    return jsonify({"message": "ok"}), 200
 
 if __name__ == '__main__':
     app.debug = True

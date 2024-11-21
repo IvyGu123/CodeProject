@@ -1,76 +1,96 @@
 <html>
-  <head>
-    <title>Book Store</title>
-    <script>
-      
-      function buyBook(bookId){
-        const response = fetch('http://localhost:5000/buyBook/'+bookId, {method: 'PUT',
+
+<head>
+  <title>Book Store</title>
+  <script>
+
+    function buyBook(bookId) {
+      fetch('http://localhost:5000/buyBook/' + bookId, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({bookid: 1}),
+        body: JSON.stringify({ bookid: bookId })
       })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:' ,data);
-        location.reload();
-          })
-          .catch((error) => {
-          console.error('Error:', error);
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data); 
+          location.reload();
+        })
+        .catch(error => {
+          console.log('Error:', error);
         });
-      }
-
-      function cancelBook(bookId){
-        const response = fetch('http://localhost:5000/cancelBook/'+bookId, {method: 'PUT',
+    }
+    function cancelBook(bookId) {
+      const response = fetch('http://localhost:5000/cancelBook/' + bookId, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({bookid: 1}),
+        body: JSON.stringify({ bookid: bookId }),
       })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:' ,data);
-        location.reload();
-          })
-          .catch((error) => {
-          console.error('Error:', error);
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+          location.reload();
+        })
+        .catch(error => {
+          console.log('Error:', error);
         });
-      }
-      function deleteBook(bookId){
-        const response = fetch('http://localhost:5000/deleteBook/'+bookId, {method: 'DELETE',
+    }
+    function deleteBook(bookId) {
+      const response = fetch('http://localhost:5000/deleteBook/' + bookId, {
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({bookid: 1}),
+        body: JSON.stringify({ bookid: bookId }),
       })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+          location.reload();
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+    function addBook(bookId) {
+    const response = fetch('http://localhost:5000/bookInfo/addBook', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ bookid: bookId }),
+    })
       .then(response => response.json())
       .then(data => {
-        console.log('Success:' ,data);
+        console.log('Success:', data);
         location.reload();
-          })
-          .catch((error) => {
-          console.error('Error:', error);
-        });
-      }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
 
-      function getBookInfoFromServer() {
-          const response = fetch('http://localhost:5000/bookinfo')
+    function getBookInfoFromServer() {
+      const response = fetch('http://localhost:5000/bookinfo')
 
-          .then(response => response.json())
-          .then(data => {
+        .then(response => response.json())
+        .then(data => {
           console.log(data);
-          
+
           var booksElement = document.getElementById("books");
-          for(let i = 0; i < data.length; i++){
+          for (let i = 0; i < data.length; i++) {
             let bookCardView = document.createElement("div");
 
             bookCardView.style.border = "1px solid #ccc";
             bookCardView.style.width = "fit-content";
             bookCardView.style.padding = "10px";
-            
+
             bookCardView.appendChild(document.createElement("img"));
             bookCardView.children[0].src = data[i].image;
-            
+
             bookCardView.appendChild(document.createElement("h2"));
             bookCardView.children[1].innerHTML = data[i].title;
             bookCardView.appendChild(document.createElement("p"));
@@ -88,54 +108,76 @@
 
             buttons.appendChild(document.createElement("button"));
             buttons.children[0].innerHTML = "Buy";
-            buttons.children[0].onclick = function(){
-              if (data[i].status == "Sold"){
+            buttons.children[0].onclick = function () {
+              if (data[i].status == "Sold") {
                 alert("Sold out");
-              }else{
+              } else {
                 buyBook(data[i].id);
               }
             }
-            
+
             buttons.appendChild(document.createElement("button"));
             buttons.children[1].innerHTML = "Cancel";
-            buttons.children[1].onclick = function(){
-              if (data[i].status == "Available"){
+            buttons.children[1].onclick = function () {
+              if (data[i].status == "Available") {
                 alert("Available");
-              }else{
+              } else {
                 cancelBook(data[i].id);
               }
             }
             buttons.appendChild(document.createElement("button"));
             buttons.children[2].innerHTML = "Delete";
-            buttons.children[2].onclick = function(){
-              deleteBook(data[i].id - 1);
+            buttons.children[2].onclick = function () {
+              deleteBook(data[i].id);
+            }
+
+            buttons.appendChild(document.createElement("button"));
+            buttons.children[2].innerHTML = "Insert";
+            buttons.children[2].onclick = function () {
+              addBook(data[i].id);
             }
             booksElement.appendChild(bookCardView);
             bookCardView.appendChild(buttons);
           }
-          
-          })
-          .catch((error) => {
+
+        })
+        .catch((error) => {
           console.error('Error:', error);
         });
+    }
+
+    window.onload = function () {
+
+      function searchBook() {
+        let bookId = document.getElementById("bookId").value;
       }
 
-      window.onload = function() { 
+      var login = sessionStorage.getItem("login");
+      if (login !== "true") {
+        window.location.href = "index.html";
+      }
+      getBookInfoFromServer();
+      var username = document.getElementById("username");
+      username.innerHTML = localStorage.getItem("username");
+    };
 
-        var login = sessionStorage.getItem("login");
-        if(login !== "true"){
-          window.location.href = "index.html";
-        }
-        getBookInfoFromServer();
-        var username = document.getElementById("header");
-        username.innerHTML = localStorage.getItem("username");
-      };
-      
-    </script>
-  
-  </head>
-  <body>
-    <div style="width: 100%; background-color: rgb(61, 255, 255); text-align: right;" id = "header">username</div>
-    <div style="display: flex;" id = "books"></div> 
-  </body>
+    function searchBook() {
+      let bookId = document.getElementById("bookId").value;
+      console.log(bookId);
+      // fetch('http://localhost:5000/bookinfo/'+bookId)
+    }
+  </script>
+
+</head>
+
+<body>
+  <div style="width: 100%; background-color: rgb(61, 255, 255); text-align: right;" id="header">
+    <span id="username" style="float: left;"></span>
+    <input type="text" id="bookId" placeholder="Search Book Id">
+    <button onclick="searchBook()">Search</button>
+    <button onclick="addBook()">insert</button>
+  </div>
+  <div style="display: flex;" id="books"></div>
+</body>
+
 </html>
