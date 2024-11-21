@@ -48,13 +48,14 @@ def getBookById(book_id):
 @app.route('/bookinfo/addBook', methods=['POST'])
 def addBook():
     new_book = {
-        'title': request.json.get('title', 'New Book'),
-        'price': request.json.get('price', 0),
-        'status': request.json.get('status', 'Available')
+        'title': 'Hello',
+        'price': 17.00,
+        'status': 'Available',
+        'id': 3
     }
     mycursor.execute(
-        "INSERT INTO book_info (title, price, status) VALUES (%s, %s, %s)",
-        (new_book['title'], new_book['price'], new_book['status'])
+        "INSERT INTO book_info (title, price, status, id) VALUES (%s, %s, %s, %s)",
+        (new_book['title'], new_book['price'], new_book['status'], new_book['id'])
     )
     mydb.commit()
     new_book['id'] = mycursor.lastrowid

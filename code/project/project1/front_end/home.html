@@ -55,13 +55,13 @@
           console.log(error);
         });
     }
-    function addBook(bookId) {
-    const response = fetch('http://localhost:5000/bookInfo/addBook', {
+    function addBook() {
+    const response = fetch('http://localhost:5000/bookinfo/addBook', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ bookid: bookId }),
+
     })
       .then(response => response.json())
       .then(data => {
@@ -131,11 +131,11 @@
               deleteBook(data[i].id);
             }
 
-            buttons.appendChild(document.createElement("button"));
-            buttons.children[2].innerHTML = "Insert";
-            buttons.children[2].onclick = function () {
-              addBook(data[i].id);
-            }
+            // buttons.appendChild(document.createElement("button"));
+            // buttons.children[2].innerHTML = "Insert";
+            // buttons.children[2].onclick = function () {
+            //   addBook();
+            // }
             booksElement.appendChild(bookCardView);
             bookCardView.appendChild(buttons);
           }
@@ -148,9 +148,23 @@
 
     window.onload = function () {
 
-      function searchBook() {
-        let bookId = document.getElementById("bookId").value;
-      }
+      // function searchBook() {
+      //   let bookId = document.getElementById("bookId").value;
+      //   fetch('http://localhost:5000/bookinfo/' + bookId, {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // })
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     console.log('Success:', data); 
+      //     location.reload();
+      //   })
+      //   .catch(error => {
+      //     console.log('Error:', error);
+      //   });
+      // }
 
       var login = sessionStorage.getItem("login");
       if (login !== "true") {
@@ -164,7 +178,20 @@
     function searchBook() {
       let bookId = document.getElementById("bookId").value;
       console.log(bookId);
-      // fetch('http://localhost:5000/bookinfo/'+bookId)
+      fetch('http://localhost:5000/bookinfo/' + bookId, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data); 
+          // location.reload();
+        })
+        .catch(error => {
+          console.log('Error:', error);
+        });
     }
   </script>
 
