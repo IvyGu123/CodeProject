@@ -97,6 +97,7 @@ def cancelBook(book_id):
         return jsonify({"message": "Book not found"}), 404
     return jsonify({"message": "ok"}), 200
 
+
 if __name__ == '__main__':
     app.debug = True
     app.run()
